@@ -1,17 +1,21 @@
 #!/usr/bin/env python3
 """
-This module demonstrates the use of type annotations in Python.
+    Callable function
 """
 from typing import Callable
 
 
-def make_multipler(multiplier: float) -> Callable[[float], float]:
+def make_multiplier(multiplier: float) -> Callable[[float], float]:
     """
-    This function returns a function that multiplies a float by multiplier.
+        Args:
+            multiplier: factor
+
+        Return:
+            multiplication in float
     """
 
-
-    def f(n: float) -> float:
+    def x(f: float) -> float:
         """ Get the second argument somthing like JS """
         return float(f * multiplier)
-    return f
+
+    return x
