@@ -3,7 +3,7 @@
 This module provides a function to add two floating-point numbers.
 
 The module contains the following function:
-- add(a: float, b: float) -> float: 
+- add(a: float, b: float) -> float:
 Returns the sum of two floating-point numbers.
 """
 
