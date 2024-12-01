@@ -2,7 +2,7 @@
 """Async Generator"""
 import random
 import asyncio
-from typing import AsyncGenerator
+from typing import Generator
 
 
 async def async_generator() -> Generator[float, None, None]:
