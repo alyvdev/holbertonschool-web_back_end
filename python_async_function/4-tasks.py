@@ -6,7 +6,7 @@ task_wait_random is being called """
 from typing import List
 
 
-wait_n = __import__('1-concurrent_coroutines').wait_n
+task_wait_n = __import__('1-concurrent_coroutines').wait_n
 
 
 def task_wait_n(n: int, max_delay: int) -> List[float]:
