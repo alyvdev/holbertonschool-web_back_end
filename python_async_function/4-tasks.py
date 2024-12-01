@@ -9,9 +9,9 @@ from typing import List
 task_wait_n = __import__('1-concurrent_coroutines').wait_n
 
 
-def task_wait_n(n: int, max_delay: int) -> List[float]:
+async def task_wait_n(n: int, max_delay: int) -> List[float]:
     """returns delayed async task"""
     delays = []
-    for _ in range(n):
-        delays.append(task_wait_n(n, max_delay))
+    for i in range(n):
+        delays.append(await task_wait_n(max_delay))
     return delays
