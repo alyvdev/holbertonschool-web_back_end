@@ -13,5 +13,5 @@ def task_wait_n(n: int, max_delay: int) -> List[float]:
     """returns delayed async task"""
     delays = []
     for _ in range(n):
-        delays.append(wait_n(n, max_delay))
+        delays.append(task_wait_n(n, max_delay))
     return delays
