@@ -5,7 +5,7 @@ BaseCaching = __import__('base_caching').BaseCaching
 
 
 class MRUCache(BaseCaching):
-    """MRU Cache"""
+    """ MRU Cache"""
     def __init__(self):
         ''' Initialize class instance. '''
         super().__init__()
@@ -25,7 +25,7 @@ class MRUCache(BaseCaching):
                 print('DISCARD: {:s}'.format(discard))
     
     def get(self, key):
-        """Return value stored in `key` key of cache.
+        """ Return value stored in `key` key of cache.
             If key is None or does not exist in cache, return None."""
         if key is not None and key in self.cache_data:
             self.keys.append(self.keys.pop(self.keys.index(key)))
