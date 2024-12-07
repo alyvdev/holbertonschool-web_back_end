@@ -5,15 +5,7 @@ BaseCaching = __import__('base_caching').BaseCaching
 
 
 class LIFOCache(BaseCaching):
-    ''' A LIFO Cache.
-        Inherits all behaviors from BaseCaching except, upon any attempt to
-        add an entry to the cache when it is at max capacity (as specified by
-        BaseCaching.MAX_ITEMS), it discards the newest entry to accommodate for
-        the new one.
-        Attributes:
-          __init__ - method that initializes class instance
-          put - method that adds a key/value pair to cache
-          get - method that retrieves a key/value pair from cache '''
+    """ LIFO CACHE"""
     def __init__(self):
         ''' Initialize class instance. '''
         super().__init__()
@@ -33,6 +25,7 @@ class LIFOCache(BaseCaching):
                 print("DISCARD: {}".format(last))
     
     def get(self, key):
+        """ Get an item by key """
         if key is not None and key in self.cache_data:
             return self.cache_data[key]
         return None
