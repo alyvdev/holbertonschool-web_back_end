@@ -23,7 +23,7 @@ class LIFOCache(BaseCaching):
                 last = self.keys.pop(-2)
                 del self.cache_data[last]
                 print("DISCARD: {}".format(last))
-    
+
     def get(self, key):
         """ Get an item by key """
         if key is not None and key in self.cache_data:
