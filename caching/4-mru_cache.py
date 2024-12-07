@@ -23,7 +23,7 @@ class MRUCache(BaseCaching):
                 discard = self.keys.pop(-2)
                 del self.cache_data[discard]
                 print('DISCARD: {:s}'.format(discard))
-    
+   
     def get(self, key):
         """ Return value stored in `key` key of cache.
             If key is None or does not exist in cache, return None."""
