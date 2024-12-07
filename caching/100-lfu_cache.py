@@ -6,36 +6,46 @@ BaseCaching = __import__('base_caching').BaseCaching
 
 class LFUCache(BaseCaching):
     """ LFU Cache"""
+
     def __init__(self):
-        ''' Initialize class instance. '''
+        """Initialize the LFUCache instance."""
         super().__init__()
-        self.keys = []
-        self.count = {}
+        self.freq = {}  # Frequency count for each key
+        self.usage = {}  # Usage order for tie-breaking
 
     def put(self, key, item):
-        """ Add an item in the cache """
-        if key and item is not None:
+        """Add an item to the cache."""
+        if key is None or item is None:
+            return
+
+        # Update the cache and frequency count
+        if key in self.cache_data:
             self.cache_data[key] = item
-            if key not in self.keys:
-                self.keys.append(key)
-            else:
-                self.keys.append(self.keys.pop(self.keys.index(key)))
-            if key in self.count:
-                self.count[key] += 1
-            else:
-                self.count[key] = 1
-            if len(self.cache_data) > BaseCaching.MAX_ITEMS:
-                discard = min(self.count, key=self.count.get)
-                self.count.pop(discard)
-                self.keys.pop(self.keys.index(discard))
-                del self.cache_data[discard]
-                print('DISCARD: {:s}'.format(discard))
+            self.freq[key] += 1
+        else:
+            if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
+                # Find the least frequently used key
+                lfu_keys = [k for k, v in self.freq.items() if v == min(self.freq.values())]
+                # Break ties using the oldest usage
+                lfu_key = min(lfu_keys, key=lambda k: self.usage[k])
+
+                # Evict the LFU key
+                del self.cache_data[lfu_key]
+                del self.freq[lfu_key]
+                del self.usage[lfu_key]
+                print(f"DISCARD: {lfu_key}")
+
+            # Add the new key to the cache
+            self.cache_data[key] = item
+            self.freq[key] = 1
+
+        # Update the usage timestamp for the key
+        self.usage[key] = len(self.usage)
 
     def get(self, key):
-        """ Return value stored in `key` key of cache.
-            If key is None or does not exist in cache, return None."""
+        """Retrieve an item from the cache."""
         if key is not None and key in self.cache_data:
-            self.keys.append(self.keys.pop(self.keys.index(key)))
-            self.count[key] += 1
+            self.freq[key] += 1  # Increment frequency
+            self.usage[key] = len(self.usage)  # Update usage timestamp
             return self.cache_data[key]
         return None
