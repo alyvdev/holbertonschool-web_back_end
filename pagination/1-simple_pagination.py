@@ -4,6 +4,7 @@
 import csv
 from typing import List, Tuple
 
+
 class Server:
     """Server class to paginate a database of popular baby names."""
     DATA_FILE = "Popular_Baby_Names.csv"
@@ -34,6 +35,7 @@ class Server:
 
         # Return the appropriate page or an empty list if out of range
         return data[start_index:end_index] if start_index < len(data) else []
+
 
 def index_range(page: int, page_size: int) -> Tuple[int, int]:
     """Return a tuple of size two containing a start index and an end index."""
