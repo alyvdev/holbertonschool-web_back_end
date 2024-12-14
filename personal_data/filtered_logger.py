@@ -2,15 +2,31 @@
 """Filter log messages based on severity level."""
 
 from typing import List
-from re import sub, escape
+from re import sub
 
 
-def filter_datum(fields: List[str], redaction: str,
+def filter_datum(fields: List, redaction: str,
                  message: str, separator: str) -> str:
-    """Filter sensitive fields in a log message."""
-    # Build regex pattern for all fields
-    escaped_fields = [escape(field) for field in fields]
-    joined_fields = '|'.join(escaped_fields)
-    pattern = f"({joined_fields})=.+?(?={escape(separator)}|$)"
-    # Replace sensitive field values with redaction
-    return sub(pattern, lambda m: f"{m.group(1)}={redaction}", message)
+    """
+        Filter and obfuscated the string
+
+        Args:
+            fields: a list of strings representing all fields to obfuscate
+                    ["password", "date_of_birth"]
+            redaction: a string representing by what the
+                       field will be obfuscated
+                       "XXXXX"
+            message: a string representing the log line
+                    ["name=egg;email=eggmin@eggsample.com;password=eggcellent;date_of_birth=12/12/1986;"]
+                    ["name=bob;email=bob@dylan.com;password=bobbycool;date_of_birth=03/04/1993;"]
+            separator: a string representing by which character is
+                    separating all fields in the log line (message)
+                    ";"
+        Return:
+            String with string ofuscated
+    """
+    for field in fields:
+        message = sub(f'{field}=.+?{separator}',
+                      f'{field}={redaction}{separator}', message)
+
+    return message
