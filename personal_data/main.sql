@@ -13,11 +13,3 @@ CREATE TABLE users (
 
 INSERT INTO users(email) VALUES ("bob@dylan.com");
 INSERT INTO users(email) VALUES ("bib@dylan.com");
-
-bob@dylan:~$ 
-bob@dylan:~$ cat main.sql | mysql -uroot -p
-Enter password: 
-bob@dylan:~$ 
-bob@dylan:~$ echo "SELECT COUNT(*) FROM users;" | mysql -uroot -p my_db
-Enter password:
-2

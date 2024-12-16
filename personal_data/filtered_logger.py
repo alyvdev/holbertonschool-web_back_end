@@ -105,3 +105,25 @@ def get_db() -> connection.MySQLConnection:
         host=host,
         database=database
     )
+
+
+def main():
+    """Main function."""
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users")
+    [print(user) for user in cursor]
+    logger = get_logger()
+    for user in cursor:
+        user_info = (
+            f"name={user[0]}; email={user[1]}; phone={user[2]}; "
+            f"ssn={user[3]}; password={user[4]}; ip={user[5]}; "
+            f"last_login={user[6]}; user_agent={user[7]};"
+        )
+        logger.info(user_info)
+    cursor.close()
+    db.close()
+
+
+if __name__ == "__main__":
+    main()
