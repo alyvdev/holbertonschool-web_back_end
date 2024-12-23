@@ -6,7 +6,27 @@ This is a simple exercise to test your understanding of the Python language.
 import redis
 import uuid
 from typing import Union, Optional, Callable
+from functools import wraps
 
+
+def count_calls(func: Callable) -> Callable:
+    """
+    Decorator that counts the number of times a function is called.
+
+    Args:
+        func (Callable): The function to decorate.
+
+    Returns:
+        Callable: The decorated function.
+    """
+
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        """Wrapper function that increments the call count and executes the method"""
+        self._redis.incr(func.__qualname__)
+        return func(self, *args, **kwargs)
+    
+    return wrapper
 
 class Cache:
     def __init__(self):
