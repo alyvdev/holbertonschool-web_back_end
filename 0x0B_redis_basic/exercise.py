@@ -19,7 +19,6 @@ def count_calls(func: Callable) -> Callable:
     Returns:
         Callable: The decorated function.
     """
-
     @wraps(func)
     def wrapper(self, *args, **kwargs):
         """Wrapper function that increments the call count and executes the method"""
@@ -28,12 +27,14 @@ def count_calls(func: Callable) -> Callable:
     
     return wrapper
 
+
 class Cache:
     def __init__(self):
         """Initialize the Redis client and flush the database."""
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         Store the given data in Redis using a random key.
