@@ -21,7 +21,8 @@ def count_calls(func: Callable) -> Callable:
     """
     @wraps(func)
     def wrapper(self, *args, **kwargs):
-        """Wrapper function that increments the call count and executes the method"""
+        """Wrapper function that increments the call
+        count and executes the method."""
         self._redis.incr(func.__qualname__)
         return func(self, *args, **kwargs)
     
@@ -55,7 +56,8 @@ class Cache:
         fn: Optional[Callable] = None
     ) -> Union[str, bytes, int, float, None]:
         """
-        Retrieve data from Redis by key and optionally apply a transformation.
+        Retrieve data from Redis by key and
+        optionally apply a transformation.
 
         Args:
             key (str): The key to retrieve the data.
@@ -77,7 +79,8 @@ class Cache:
             key (str): The key to retrieve the data.
 
         Returns:
-            Optional[str]: The retrieved data as a string, or None if not found.
+            Optional[str]: The retrieved data as a string,
+            or None if not found.
         """
         return self.get(key, fn=lambda d: d.decode("utf-8"))
 
@@ -89,6 +92,7 @@ class Cache:
             key (str): The key to retrieve the data.
 
         Returns:
-            Optional[int]: The retrieved data as an integer, or None if not found.
+            Optional[int]: The retrieved data as an integer,
+            or None if not found.
         """
         return self.get(key, fn=int)
