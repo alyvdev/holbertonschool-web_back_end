@@ -1,35 +1,41 @@
 #!/usr/bin/env python3
-''' Redis Module '''
+""" redis module
+"""
 import redis
-import uuid
-from typing import Union, Callable, Optional
+from uuid import uuid4
+from typing import Union, Optional, Callable
 from functools import wraps
 
 
+UnionOfTypes = Union[str, bytes, int, float]
+
+
 def count_calls(method: Callable) -> Callable:
-    ''' def count calls '''
+    """count number of calls
+        Callable: [method] """
+    key = method.__qualname__
+
     @wraps(method)
     def wrapper(self, *args, **kwds):
-        ''' def wrapper '''
-        key_m = method.__qualname__
-        self._redis.incr(key_m)
+        """wrapper of decorator"""
+        self._redis.incr(key)
         return method(self, *args, **kwds)
     return wrapper
 
 
 def call_history(method: Callable) -> Callable:
-    ''' def call history '''
+    ''' decorator to store the history of inputs and
+        outputs for a particular function.
+    '''
     @wraps(method)
-    def wrapper(self, *args, **kwds):
-        ''' def wrapper'''
-        key_m = method.__qualname__
-        inp_m = key_m + ':inputs'
-        outp_m = key_m + ":outputs"
-        data = str(args)
-        self._redis.rpush(inp_m, data)
-        fin = method(self, *args, **kwds)
-        self._redis.rpush(outp_m, str(fin))
-        return fin
+    def wrapper(self, *args, **kwargs):
+        """wrapper of decorator"""
+        input = str(args)
+        self._redis.rpush(method.__qualname__ + ":inputs", input)
+
+        output = str(method(self, *args, **kwargs))
+        self._redis.rpush(method.__qualname__ + ":outputs", output)
+        return output
     return wrapper
 
 
@@ -60,30 +66,38 @@ def replay(fn: Callable):
         print(f'{f_name}(*{i}) -> {o}')
 
 
-class Cache():
-    ''' class cache '''
+class Cache:
+    """ Cache redis class
+    """
+
     def __init__(self):
-        ''' def init '''
+        """ constructor for redis model
+        """
         self._redis = redis.Redis()
         self._redis.flushdb()
 
     @call_history
     @count_calls
-    def store(self, data: Union[str, bytes, int, float]) -> str:
-        ''' def store '''
-        gen = str(uuid.uuid4())
-        self._redis.set(gen, data)
-        return gen
+    def store(self, data: UnionOfTypes) -> str:
+        """store data into redis cache"""
+        key = str(uuid4())
 
-    def get(self, key: str,
-            fn: Optional[Callable] = None) -> Union[str, bytes, int, float]:
-        ''' def get '''
-        value = self._redis.get(key)
-        return value if not fn else fn(value)
+        self._redis.mset({key: data})
+        return key
 
-    def get_int(self, key):
-        return self.get(key, int)
+    def get(self, key: str, fn: Optional[Callable] = None)\
+            -> UnionOfTypes:
+        """get key from redis"""
+        if fn:
+            return fn(self._redis.get(key))
+        data = self._redis.get(key)
+        return data
 
-    def get_str(self, key):
-        value = self._redis.get(key)
-        return value.decode("utf-8")
+    def get_str(self, string: bytes) -> str:
+        """ get a string """
+        return string.decode("utf-8")
+
+    def get_int(self, number: int) -> int:
+        """ get int value"""
+        result = 0 * 256 + int(number)
+        return result
