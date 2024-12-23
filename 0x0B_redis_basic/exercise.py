@@ -28,16 +28,21 @@ class Cache:
         self._redis.set(key, data)  # Store the data in Redis with the key
         return key
 
-    def get(self, key: str, fn: Optional[Callable] = None) -> Union[str, bytes, int, float, None]:
+    def get(
+            self,
+            key: str,
+            fn: Optional[Callable] = None
+    ) -> Union[str, bytes, int, float, None]:
         """
-        Retrieve data from Redis by key and optionally apply a transformation function.
+        Retrieve data from Redis by key and
+        optionally apply a transformation function.
 
         Args:
             key (str): The key to retrieve the data.
             fn (Optional[Callable]): A function to transform the data.
 
         Returns:
-            Union[str, bytes, int, float, None]: The retrieved data, optionally transformed.
+            Union[str, bytes, int, float, None]
         """
         data = self._redis.get(key)
         if data is None:
@@ -52,7 +57,8 @@ class Cache:
             key (str): The key to retrieve the data.
 
         Returns:
-            Optional[str]: The retrieved data as a string, or None if the key does not exist.
+            Optional[str]: The retrieved data as a string,
+            or None if the key does not exist.
         """
         return self.get(key, fn=lambda d: d.decode("utf-8"))
 
@@ -64,6 +70,7 @@ class Cache:
             key (str): The key to retrieve the data.
 
         Returns:
-            Optional[int]: The retrieved data as an integer, or None if the key does not exist.
+            Optional[int]: The retrieved data as an integer,
+            or None if the key does not exist.
         """
         return self.get(key, fn=int)
