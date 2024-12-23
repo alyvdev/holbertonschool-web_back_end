@@ -5,7 +5,7 @@ This is a simple exercise to test your understanding of the Python language.
 
 import redis
 import uuid
-from typing import Union
+from typing import Union, Optional, Callable
 
 
 class Cache:
@@ -24,25 +24,24 @@ class Cache:
         Returns:
             str: The generated random key used to store the data.
         """
-        key = str(uuid.uuid4())  # Generate a random UUID key as a string
-        self._redis.set(key, data)  # Store the data in Redis with the key
+        key = str(uuid.uuid4())
+        self._redis.set(key, data)
         return key
 
     def get(
-            self,
-            key: str,
-            fn: Optional[Callable] = None
+        self,
+        key: str,
+        fn: Optional[Callable] = None
     ) -> Union[str, bytes, int, float, None]:
         """
-        Retrieve data from Redis by key and
-        optionally apply a transformation function.
+        Retrieve data from Redis by key and optionally apply a transformation.
 
         Args:
             key (str): The key to retrieve the data.
             fn (Optional[Callable]): A function to transform the data.
 
         Returns:
-            Union[str, bytes, int, float, None]
+            Union[str, bytes, int, float, None]: The retrieved data.
         """
         data = self._redis.get(key)
         if data is None:
@@ -57,8 +56,7 @@ class Cache:
             key (str): The key to retrieve the data.
 
         Returns:
-            Optional[str]: The retrieved data as a string,
-            or None if the key does not exist.
+            Optional[str]: The retrieved data as a string, or None if not found.
         """
         return self.get(key, fn=lambda d: d.decode("utf-8"))
 
@@ -70,7 +68,6 @@ class Cache:
             key (str): The key to retrieve the data.
 
         Returns:
-            Optional[int]: The retrieved data as an integer,
-            or None if the key does not exist.
+            Optional[int]: The retrieved data as an integer, or None if not found.
         """
         return self.get(key, fn=int)
