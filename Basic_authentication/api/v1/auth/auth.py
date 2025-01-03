@@ -14,7 +14,7 @@ class Auth:
             return True
         if not path.endswith('/'):
             path += '/'
-        
+            
         return not any(path.startswith(exc.rstrip('/') + '/') 
                   for exc in excluded_paths)
 
