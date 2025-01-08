@@ -18,10 +18,10 @@ auth_type = getenv("AUTH_TYPE")
 if auth_type == "auth":
     auth = Auth()
 
+
 @app.before_request
 def before_request():
-    """ Before request handler
-    """
+    """Before request handler."""
     if auth is None:
         return
 
@@ -39,23 +39,24 @@ def before_request():
     if auth.current_user(request) is None:
         abort(403)
 
+
 @app.errorhandler(404)
 def not_found(error) -> str:
-    """ Not found handler
-    """
+    """Not found handler."""
     return jsonify({"error": "Not found"}), 404
+
 
 @app.errorhandler(401)
 def unauthorized(error) -> str:
-    """ Unauthorized handler
-    """
+    """Unauthorized handler."""
     return jsonify({"error": "Unauthorized"}), 401
+
 
 @app.errorhandler(403)
 def forbidden(error) -> str:
-    """ Forbidden handler
-    """
+    """Forbidden handler."""
     return jsonify({"error": "Forbidden"}), 403
+
 
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
