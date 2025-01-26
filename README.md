@@ -3,7 +3,7 @@
 ## Overview
 This repository contains a collection of backend web development projects completed during the Holberton School curriculum. The projects demonstrate various backend technologies, programming skills, and web development concepts.
 
-![Holberton School Web Backend Projects](https://hizliresim.com/caoktif)
+![Holberton School Web Backend Projects](https://i.hizliresim.com/caoktif.png)
 
 ## Projects Included
 - Backend web application development
