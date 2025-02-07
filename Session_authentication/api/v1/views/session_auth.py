@@ -41,7 +41,6 @@ def login():
     '/auth_session/logout', methods=['DELETE'], strict_slashes=False)
 def logout():
     """DELETE /api/v1/auth_session/logout
-
     Return:
       - empty JSON
     """
