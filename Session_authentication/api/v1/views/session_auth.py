@@ -2,12 +2,13 @@
 """Session authentication views
 """
 from os import getenv
-from flask import jsonify, request
+from flask import jsonify, request, abort
 from api.v1.views import app_views
 from models.user import User
 
 
-@app_views.route('/auth_session/login', methods=['POST'], strict_slashes=False)
+@app_views.route(
+    '/auth_session/login', methods=['POST'], strict_slashes=False)
 def login():
     """POST /api/v1/auth_session/login
     Return:
@@ -35,10 +36,12 @@ def login():
     response.set_cookie(getenv('SESSION_NAME'), session_id)
     return response
 
-@app_views.route('/auth_session/logout',
-methods=['DELETE'], strict_slashes=False)
+
+@app_views.route(
+    '/auth_session/logout', methods=['DELETE'], strict_slashes=False)
 def logout():
     """DELETE /api/v1/auth_session/logout
+
     Return:
       - empty JSON
     """
