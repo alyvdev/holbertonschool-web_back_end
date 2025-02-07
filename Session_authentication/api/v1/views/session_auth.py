@@ -22,7 +22,11 @@ def login():
     if not password:
         return jsonify({"error": "password missing"}), 400
 
-    users = User.search({'email': email})
+    try:
+        users = User.search({'email': email})
+    except Exception:  # Daha spesifik bir exception yakalamak daha iyi olur
+        return jsonify({"error": "no user found for this email"}), 404
+
     if not users:
         return jsonify({"error": "no user found for this email"}), 404
 
