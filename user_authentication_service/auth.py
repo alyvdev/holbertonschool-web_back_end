@@ -10,7 +10,7 @@ from sqlalchemy.exc import InvalidRequestError
 from uuid import uuid4
 
 
-def _hash_password(password: str = '') -> bytes:
+def _hash_password(password: str = '') -> str:
     """
         Hashed the password
 
@@ -25,3 +25,13 @@ def _hash_password(password: str = '') -> bytes:
     hash_str: str = str(hashed.decode())
 
     return hash_str
+
+
+def _generate_uuid() -> str:
+    """ Generate uuid
+        Return:
+            uuid in string
+    """
+    UUID = uuid4()
+
+    return str(UUID)
