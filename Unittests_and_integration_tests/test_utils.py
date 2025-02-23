@@ -11,10 +11,39 @@ class TestAccessNestedMap(unittest.TestCase):
         ({"a": {"b": 2}}, ("a",), {"b": 2}),
         ({"a": {"b": 2}}, ("a", "b"), 2),
     ])
-    def test_access_nested_map(self, nested_map, path, expected):
-        self.assertEqual(access_nested_map(nested_map, path), expected)
+    @parameterized.expand([
+        ({"a": 1}, ("a",), 1),
+        ({"a": {"b": 2}}, ("a",), {"b": 2}),
+        ({"a": {"b": 2}}, ("a", "b"), 2)
+    ])
+    def test_access_nested_map(self, nested_map, path_map, result_expec):
+        """ Access nested method
 
-    def test_access_nested_map_exception(self, nested_map, path, expected_key):
-        with self.assertRaises(KeyError) as cm:
-            access_nested_map(nested_map, path)
-        self.assertEqual(str(cm.exception), f"'{expected_key}'")
+            args:
+                nested_map: {"a": 1},
+                path: ("a",)
+                result_expec: 1
+
+            return
+                Ok if its correct
+        """
+        self.assertEqual(access_nested_map(nested_map, path_map), result_expec)
+
+    @parameterized.expand([
+        ({}, ("a",)),
+        ({"a": 1}, ("a", "b"))
+    ])
+    def test_access_nested_map_exception(self, nested_map, path_map):
+        """ Exception access nested method
+            args:
+                nested_map: {}
+                path: ("a",)
+
+            return:
+                ok if its correct
+        """
+        with self.assertRaises(KeyError) as error:
+            access_nested_map(nested_map, path_map)
+
+        self.assertEqual(
+            f'KeyError({str(error.exception)})', repr(error.exception))
