@@ -1,31 +1,16 @@
 #!/usr/bin/env python3
-"""DB module
-"""
-from sqlalchemy import create_engine
+"""A class that can be used to represent a user."""
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm.session import Session
+from sqlalchemy import Column, Integer, String
 
-from user import Base
+Base = declarative_base()
 
 
-class DB:
-    """DB class
-    """
-
-    def __init__(self) -> None:
-        """Initialize a new DB instance
-        """
-        self._engine = create_engine("sqlite:///a.db", echo=True)
-        Base.metadata.drop_all(self._engine)
-        Base.metadata.create_all(self._engine)
-        self.__session = None
-
-    @property
-    def _session(self) -> Session:
-        """Memoized session object
-        """
-        if self.__session is None:
-            DBSession = sessionmaker(bind=self._engine)
-            self.__session = DBSession()
-        return self.__session
+class User(Base):
+    """A class that can be used to represent a user."""
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    email = Column(String(250), nullable=False)
+    hashed_password = Column(String(250), nullable=False)
+    session_id = Column(String(250), nullable=True)
+    reset_token = Column(String(250), nullable=True)
