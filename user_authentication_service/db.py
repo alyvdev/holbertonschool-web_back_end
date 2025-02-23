@@ -24,6 +24,8 @@ class DB:
     @property
     def _session(self) -> Session:
         """Memoized session object
+        Return:
+            Session: the Session instance
         """
         if self.__session is None:
             DBSession = sessionmaker(bind=self._engine)
@@ -32,6 +34,8 @@ class DB:
 
     def add_user(self, email: str, hashed_password: str) -> User:
         """Add a new user to the database.
+        Return:
+            User: the created user
         """
         new_user = User(email=email, hashed_password=hashed_password)
         self._session.add(new_user)
