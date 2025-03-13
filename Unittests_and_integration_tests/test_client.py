@@ -4,6 +4,7 @@ Unit tests for GithubOrgClient class
 """
 import unittest
 from unittest.mock import patch
+from requests.exceptions import HTTPError
 from parameterized import parameterized_class
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
@@ -48,12 +49,20 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
                 def __init__(self, json_data):
                     self._json_data = json_data
+                    self.status_code = 200
 
                 def json(self):
                     """
                     Return the json data
                     """
                     return self._json_data
+
+                def raise_for_status(self):
+                    """
+                    Mock the raise_for_status method of requests.Response
+                    """
+                    if self.status_code >= 400:
+                        raise HTTPError(f"HTTP Error: {self.status_code}")
 
             # Return appropriate fixture based on URL
             if url.endswith('/orgs/testorg'):
