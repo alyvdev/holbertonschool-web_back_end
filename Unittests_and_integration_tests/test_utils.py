@@ -2,12 +2,12 @@
 """Tests for the utils module."""
 import unittest
 from unittest.mock import patch
-import requests
 from utils import access_nested_map, get_json, memoize
-from parameterized import parameterized, parameterized_class
+from parameterized import parameterized
 
 
 class TestAccessNestedMap(unittest.TestCase):
+    """Tests for the access_nested_map method."""
     @parameterized.expand([
         ({"a": 1}, ("a",), 1),
         ({"a": {"b": 2}}, ("a",), {"b": 2}),
@@ -52,12 +52,14 @@ class TestMemoize(unittest.TestCase):
     def test_memoize(self):
         """Test that memoization works as expected."""
         class TestClass:
-
+            """Test class for memoize decorator."""
             def a_method(self):
+                """A method that returns 42."""
                 return 42
 
             @memoize
             def a_property(self):
+                """A property that returns a value from a method."""
                 return self.a_method()
 
         with patch.object(TestClass, 'a_method') as mock_method:
