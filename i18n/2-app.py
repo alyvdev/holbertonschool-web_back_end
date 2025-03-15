@@ -26,10 +26,14 @@ def index() -> str:
     return render_template('2-index.html')
 
 
-@babel.locale_selector
 def get_locale() -> str:
     """ Determines best match for supported languages """
     return request.accept_languages.best_match(app.config['LANGUAGES'])
+
+
+# Initialize Babel with the application
+babel = Babel()
+babel.init_app(app, locale_selector=get_locale)
 
 
 if __name__ == "__main__":
