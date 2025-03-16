@@ -43,16 +43,13 @@ def before_request():
     g.user = get_user()
 
 
+@babel.localeselector
 def get_locale():
     """Determine the best match for supported languages"""
     locale = request.args.get('locale')
     if locale and locale in app.config['LANGUAGES']:
         return locale
     return request.accept_languages.best_match(app.config['LANGUAGES'])
-
-
-babel = Babel()
-babel.init_app(app, locale_selector=get_locale)
 
 
 @app.route('/', strict_slashes=False)
