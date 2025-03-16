@@ -3,11 +3,11 @@
 
 from os import getenv
 from typing import Union, Optional
+from datetime import datetime
 from pytz import timezone
+from pytz.exceptions import UnknownTimeZoneError
 from flask import Flask, request, render_template, g
 from flask_babel import Babel
-import pytz.exceptions
-
 
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
@@ -17,55 +17,59 @@ users = {
 }
 
 app = Flask(__name__)
-babel = Babel(app)
 
 
 class Config(object):
     """ Babel configuration """
     LANGUAGES = ['en', 'fr']
-    # these are the inherent defaults just btw
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
 
 
-# set the above class object as the configuration for the app
-app.config.from_object('6-app.Config')
+app.config.from_object(Config)
+
+# Dil ve zaman dilimi seçici fonksiyonlar
 
 
-@app.route('/', methods=['GET'], strict_slashes=False)
-def index() -> str:
-    """ GET /
-    Return: 5-index.html
-    """
-    return render_template('6-index.html')
-
-
-@babel.localeselector
 def get_locale() -> Optional[str]:
     """ Determines best match for supported languages """
-    # check if there is a locale parameter/query string
     if request.args.get('locale'):
         locale = request.args.get('locale')
         if locale in app.config['LANGUAGES']:
             return locale
-    # check if there is a locale in an existing user's profile
-    elif g.user and g.user.get('locale')\
-            and g.user.get('locale') in app.config['LANGUAGES']:
+    elif g.user and g.user.get('locale') and g.user.get('locale') in app.config['LANGUAGES']:
         return g.user.get('locale')
-    # default to return as a failsafe
     else:
         return request.accept_languages.best_match(app.config['LANGUAGES'])
+
+
+def get_timezone() -> Optional[str]:
+    """ Determines the timezone """
+    if request.args.get('timezone'):
+        tz_param = request.args.get('timezone')
+        try:
+            return timezone(tz_param).zone
+        except UnknownTimeZoneError:
+            return None
+    elif g.user and g.user.get('timezone'):
+        try:
+            return timezone(g.user.get('timezone')).zone
+        except UnknownTimeZoneError:
+            return None
+    return app.config['BABEL_DEFAULT_TIMEZONE']
+
+
+# Babel nesnesini oluştururken selector fonksiyonlarını bağla
+babel = Babel(app, locale_selector=get_locale, timezone_selector=get_timezone)
 
 
 def get_user() -> Union[dict, None]:
     """ Returns user dict if ID can be found """
     if request.args.get('login_as'):
-        # have to type cast  the param to be able to search the user dict
         user = int(request.args.get('login_as'))
         if user in users:
             return users.get(user)
-    else:
-        return None
+    return None
 
 
 @app.before_request
@@ -74,25 +78,23 @@ def before_request() -> None:
     g.user = get_user()
 
 
-@babel.timezoneselector
-def get_timezone() -> Optional[str]:
-    """ Determines best match for supported timezones """
-    # check if there is a timezone parameter/query string
-    if request.args.get('timezone'):
-        tz_param = request.args.get('timezone')
-        try:
-            return timezone(tz_param).zone
-        except pytz.exceptions.UnknownTimeZoneError:
-            return None
-    # check if there is a timezone in an existing user's profile
-    elif g.user and g.user.get('timezone'):
-        try:
-            return timezone(g.user.get('timezone')).zone
-        except pytz.exceptions.UnknownTimeZoneError:
-            return None
-    # default to return as a failsafe
+@app.route('/', methods=['GET'], strict_slashes=False)
+def index() -> str:
+    """ GET /
+    Return: 6-index.html
+    """
+    tz = get_timezone()
+    user_timezone = timezone(tz) if tz else timezone(
+        app.config['BABEL_DEFAULT_TIMEZONE'])
+
+    current_time = datetime.now(user_timezone)
+    locale = get_locale()
+    if locale == 'fr':
+        formatted_time = current_time.strftime("%d %B %Y à %H:%M:%S")
     else:
-        return request.accept_languages.best_match(app.config['LANGUAGES'])
+        formatted_time = current_time.strftime("%b %d, %Y, %I:%M:%S %p")
+
+    return render_template('6-index.html', current_time=formatted_time)
 
 
 if __name__ == "__main__":
