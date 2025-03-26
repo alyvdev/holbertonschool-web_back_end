@@ -1,16 +1,16 @@
--- Task 10: Safe divide - creates a function SafeDiv that divides
--- (and returns) the first by the second number
--- or returns 0 if the second number is equal to 0
-DELIMITER;
+-- Drop function if it already exists
 DROP FUNCTION IF EXISTS SafeDiv;
-CREATE FUNCTION SafeDiv (a INT, b INT)
-RETURNS FLOAT
+
+-- Create SafeDiv function
+DELIMITER //
+CREATE FUNCTION SafeDiv(a INT, b INT)
+RETURNS FLOAT DETERMINISTIC
 BEGIN
-    DECLARE result FLOAT;
+    -- Check if b is 0, return 0 if true, otherwise return a/b
     IF b = 0 THEN
-        SET result = 0;
+        RETURN 0;
     ELSE
-        SET result = a / b;
+        RETURN a / b;
     END IF;
-    RETURN result;
-END;
+END //
+DELIMITER ;
