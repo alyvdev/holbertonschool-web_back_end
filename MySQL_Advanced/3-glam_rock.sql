@@ -1,7 +1,7 @@
--- Select Glam rock bands and calculate their lifespan
+-- Select Glam rock bands and calculate their lifespan using 2024 as the current year
 SELECT 
     band_name,
-    IFNULL(split, 2025) - formed AS lifespan
+    IFNULL(split, 2024) - formed AS lifespan
 FROM 
     metal_bands
 WHERE 
