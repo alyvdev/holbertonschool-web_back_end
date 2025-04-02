@@ -21,3 +21,15 @@ if __name__ == "__main__":
     )
 
     print(f'{check} status check')
+
+    # Get the top 10 IPs
+    print('IPs:')
+    pipeline = [
+        {"$group": {"_id": "$ip", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}},
+        {"$limit": 10}
+    ]
+    top_ips = list(db_nginx.aggregate(pipeline))
+
+    for ip_data in top_ips:
+        print(f"\t{ip_data['_id']}: {ip_data['count']}")
