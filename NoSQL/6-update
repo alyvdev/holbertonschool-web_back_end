@@ -3,6 +3,6 @@
 // Set the 'address' field to "972 Mission street" for the matched documents
 
 db.school.updateMany(
-   { name: "Holberton school" }, // Filter: find documents with name "Holberton school"
-   { $set: { address: "972 Mission street" } } // Update: set the address field
-);
+    { "name": "Holberton school" },
+    { $set: { "address": "972 Mission street" } }
+ );
