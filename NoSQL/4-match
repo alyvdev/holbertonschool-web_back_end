@@ -1,0 +1,5 @@
+// Finds all documents in the 'school' collection
+// where the 'name' field is exactly "Holberton school".
+// The database to use is determined by the argument passed to the mongo command.
+
+db.school.find({ name: "Holberton school" });
