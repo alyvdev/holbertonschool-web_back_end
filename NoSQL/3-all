@@ -1,0 +1,4 @@
+// Lists all documents in the 'school' collection.
+// The database to use is determined by the argument passed to the mongo command.
+
+db.school.find();
