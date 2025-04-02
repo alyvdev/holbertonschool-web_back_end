@@ -1,0 +1,8 @@
+// Counts the total number of documents in the 'school' collection.
+// The database to use is determined by the argument passed to the mongo command.
+
+// Using find().count() - common and works well for counting all documents
+// db.school.find().count();
+
+// Using countDocuments({}) - the more modern and generally recommended way
+db.school.countDocuments({});
