@@ -1,0 +1,5 @@
+// Inserts a document into the 'school' collection.
+// The document has one field: 'name' with the value "Holberton school".
+// The database to use is determined by the argument passed to the mongo command.
+
+db.school.insert({ name: "Holberton school" });
