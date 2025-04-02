@@ -1,8 +1,5 @@
-// Select the collection 'school'
-// Update all documents where the 'name' field is "Holberton school"
-// Set the 'address' field to "972 Mission street" for the matched documents
-
+// 6-update
 db.school.updateMany(
-    { "name": "Holberton school" },
-    { $set: { "address": "972 Mission street" } }
- );
+    { name: "Holberton school" },
+    { $set: { address: "972 Mission street" } }
+)
