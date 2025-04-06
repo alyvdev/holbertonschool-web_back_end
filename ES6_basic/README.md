@@ -1,1 +1,1 @@
-README file for ESLint
+﻿README
