@@ -7,19 +7,17 @@ import uploadPhoto from './5-photo-reject';
  * @param {string} firstName - The user's first name.
  * @param {string} lastName - The user's last name.
  * @param {string} fileName - The name of the file to upload.
- * @returns {Promise<Array<{status: string, value: any}>>} A promise that resolves to an array of settlement results.
+ * @returns {Promise<Array<{status: string, value: any}>>}
  */
 function handleProfileSignup(firstName, lastName, fileName) {
   return Promise.allSettled([
     signUpUser(firstName, lastName),
     uploadPhoto(fileName),
-  ]).then((results) =>
-    results.map((result) => ({
-      status: result.status,
-      value:
+  ]).then((results) => results.map((result) => ({
+    status: result.status,
+    value:
         result.status === 'fulfilled' ? result.value : String(result.reason),
-    }))
-  );
+  })));
 }
 
 export default handleProfileSignup;
